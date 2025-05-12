@@ -1,35 +1,34 @@
 import os
-from os import system as ss
 import random
-ll = 'pip install'
+import asyncio
+import time
+import json
+from datetime import datetime
+import pytz
+from os import system as ss
+from colorama import Fore, Style
+from aiohttp import ClientSession, ClientTimeout, ClientResponseError
+from aiohttp_socks import ProxyConnector
+from fake_useragent import FakeUserAgent
 try:
-	from cfonts import render
+    from cfonts import render
 except ModuleNotFoundError:
-	ss(ll+' python-cfonts')
+    ss('pip install python-cfonts')
 try:
     import requests
 except ModuleNotFoundError:
     os.system("pip install requests")
-from aiohttp import (
-    ClientResponseError,
-    ClientSession,
-    ClientTimeout
-)
-from aiohttp_socks import ProxyConnector
-from fake_useragent import FakeUserAgent
-from datetime import datetime
-from colorama import *
-import asyncio, time, json, os, pytz
+
 wib = pytz.timezone('Asia/Jakarta')
 
 print(f'''{render('Script', colors=['red', 'yellow'], align='center')}''')
 print(f'''{render('Atomic', colors=['green', 'yellow'], align='center')}''')
 print("""\033[1;37m
-╔━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╗                    
+╔━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╗
 ║\33[0;41m[ ENTER THE TOOL'S PASSWORD ✅ ] \033[0;92m║
 ╚━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╝              """)
 password ='Atomic996'
-one = str(input('''❖ - 𝐏𝐀𝐒𝐒𝐖𝐑𝐃 :  ''') )
+one = str(input('''❖ - 𝐏𝐀𝐒𝐒𝐖𝐎𝐑𝐃 :  ''') )
 if one == password:
     print(f"""
 𝐘𝐨𝐮 𝐡𝐚𝐯𝐞 𝐛𝐞𝐞𝐧 𝐥𝐨𝐠𝐠𝐞𝐝 𝐢𝐧 𝐬𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 ✅
@@ -37,21 +36,21 @@ if one == password:
     time.sleep(1)
 else:
     exit("""
-𝚃𝚑𝚎 𝚙𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚒𝚜 𝚒𝚗𝚌𝚘𝚛𝚛𝚎𝚌𝚝 ❌ 
+𝚃𝚑𝚎 𝚙𝚊𝚜𝚜𝚠𝚘𝚛𝚍 𝚒𝚜 𝚒𝚗𝚌𝚘𝚛𝚛𝚎𝚌𝚝 ❌
 𝙿𝚕𝚎𝚊𝚜𝚎 𝚌𝚘𝚗𝚝𝚊𝚌𝚝 𝚝𝚑𝚎 𝚍𝚎𝚟𝚎𝚕𝚘𝚙𝚎𝚛 𝚝𝚘 𝚏𝚒𝚗𝚍 𝚘𝚞𝚝 @Atomic994 ✅""")
 
 time.sleep(3)
-os.system('clear') 
+os.system('clear')
 
 print(f"""
 {render('solix', colors=['green', 'yellow'], align='center')}
 {render('Atomic', colors=['green', 'yellow'], align='center')}
 \033[1;37m
-╔━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╗                    
+╔━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╗
 ║\33[0;41m[Search for my channel On Telegram : Airdrop_web3_ato ]\033[0;92m║
-╚━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╝              
+╚━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╝
 \033[1;37m
-\33[0;41m Auto Task & Auto Play ✅ \033[0;92m 
+\33[0;41m Auto Task & Auto Play ✅ \033[0;92m
 \033[1;37m
 \33[0;42m Developer : @Atomic994 ☠️ \033[0;92m
 \033[1;37m
@@ -67,7 +66,7 @@ class Solix:
             "Sec-Fetch-Dest": "empty",
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "cross-site",
-            "Sec-Fetch-Storage-Access": "active"
+            "User-Agent": FakeUserAgent().random
         }
         self.BASE_API = "https://api.solixdepin.net/api"
         self.ref_code = "99DqVgWH" # U can change it with yours.
@@ -76,7 +75,11 @@ class Solix:
         self.account_proxies = {}
         self.access_tokens = {}
         self.refresh_tokens = {}
-        self.request_counter ={}
+        self.min_delay = 45  # الحد الأدنى للتأخير بالثواني
+        self.max_delay = 230  # الحد الأقصى للتأخير بالثواني
+
+    def random_delay(self):
+        return random.uniform(self.min_delay, self.max_delay)
 
     def clear_terminal(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -117,16 +120,7 @@ class Solix:
                 return []
         except json.JSONDecodeError:
             return []
-            
-     async def human_delay(self, min=45, max=135):
-            """تأخير عشوائي  مع ارتجاج لمحكات السلوك البشري """
-            delay = random.uniform(min, max) + random.uniform(-1, 59)
-            await asyncio.sleep(max(0.5, delay))
     
-    async def rotate_user_agent(self):
-        """تغيير User-Agent عشوائياً لكل طلب"""
-        self.headers["User-Agent"] = FakeUserAgent().random
-            
     async def load_proxies(self, use_proxy_choice: int):
         filename = "proxy.txt"
         try:
@@ -138,14 +132,12 @@ class Solix:
                         with open(filename, 'w') as f:
                             f.write(content)
                         self.proxies = content.splitlines()
-                        random.shuffle(self.proxies)
             else:
                 if not os.path.exists(filename):
                     self.log(f"{Fore.RED + Style.BRIGHT}File {filename} Not Found.{Style.RESET_ALL}")
                     return
                 with open(filename, 'r') as f:
                     self.proxies = f.read().splitlines()
-                    random.shuffle(self.proxies)
             
             if not self.proxies:
                 self.log(f"{Fore.RED + Style.BRIGHT}No Proxies Found.{Style.RESET_ALL}")
@@ -159,38 +151,6 @@ class Solix:
         except Exception as e:
             self.log(f"{Fore.RED + Style.BRIGHT}Failed To Load Proxies: {e}{Style.RESET_ALL}")
             self.proxies = []
-            
-     async def rate_limit_check(self, email):
-        """التحكم في معدل الطلبات لكل حساب"""
-        if email not in self.request_counter:
-            self.request_counter[email] = {
-                'count': 0,
-                'last_reset': time.time()
-            }
-        
-        now = time.time()
-        if now - self.request_counter[email]['last_reset'] > 3600:  # إعادة الضبط كل ساعة
-            self.request_counter[email] = {
-                'count': 0,
-                'last_reset': now
-            }
-        
-        self.request_counter[email]['count'] += 1
-        if self.request_counter[email]['count'] > 50:  # الحد الأقصى 50 طلب/ساعة
-            await asyncio.sleep(random.uniform(30, 120))  # تأخير طويل إذا تجاوز الحد
-
-    async def auth_login(self, email: str, password: str, proxy=None, retries=5):
-        await self.rate_limit_check(email)
-        await self.rotate_user_agent()
-        await self.human_delay()
-        
-        url = f"{self.BASE_API}/auth/login-password"
-        data = json.dumps({"email":email,"referralByCode":self.ref_code,"captchaToken":"","password":password})
-        headers = {
-            **self.headers,
-            "Content-Length": str(len(data)),
-            "Content-Type": "application/json"
-        }
 
     def check_proxy_schemes(self, proxies):
         schemes = ["http://", "https://", "socks4://", "socks5://"]
@@ -278,9 +238,6 @@ class Solix:
                 return self.print_message(self.mask_account(email), proxy, Fore.RED, f"GET Auth Token Failed: {Fore.YELLOW+Style.BRIGHT}{str(e)}")
     
     async def auth_refresh(self, email: str, password: str, use_proxy: bool, proxy=None, retries=5):
-        await self.rate_limit_check(email)
-        await self.rotate_user_agent()
-        await self.human_delay()
         url = f"{self.BASE_API}/auth/refresh"
         data = json.dumps({"refreshToken":self.refresh_tokens[email]})
         headers = {
@@ -309,9 +266,6 @@ class Solix:
                 return self.print_message(self.mask_account(email), proxy, Fore.RED, f"Refreshing Auth Token Failed: {Fore.YELLOW+Style.BRIGHT}{str(e)}")
     
     async def get_total_point(self, email: str, proxy=None, retries=5):
-        await self.rate_limit_check(email)
-        await self.rotate_user_agent()
-        await self.human_delay(3, 7)
         url = f"{self.BASE_API}/point/get-total-point"
         headers = {
             **self.headers,
@@ -532,10 +486,11 @@ class Solix:
                         if status == "idle":
                             perform = await self.perform_task(email, task_id, title, proxy)
                             if perform and perform.get("result") == "success":
-                                self.print_message(self.mask_account(email), proxy, Fore.WHITE, 
+                                self.print_message(self.mask_account(email), proxy,Fore.WHITE, 
                                     f"Perform Task {title} "
                                     f"{Fore.GREEN+Style.BRIGHT}Success{Style.RESET_ALL}"
                                 )
+                                await asyncio.sleep(self.random_delay())  # Add delay here
 
                                 claim = await self.claim_task(email, task_id, title, proxy)
                                 if claim and claim.get("result") == "success":
@@ -566,9 +521,6 @@ class Solix:
             await asyncio.sleep(24 * 60 * 60)     
         
     async def process_accounts(self, email: str, password: str, use_proxy: bool):
-        # تأخير عشوائي قبل بدء كل حساب
-        await asyncio.sleep(random.uniform(5, 30))
-        
         self.access_tokens[email], self.refresh_tokens[email] = await self.process_user_login(email, password, use_proxy)
         if self.access_tokens[email] and self.refresh_tokens[email]:
             tasks = [
@@ -612,12 +564,11 @@ class Solix:
 
                     if "@" in email and password:
                         tasks.append(asyncio.create_task(self.process_accounts(email, password, use_proxy)))
-                        await asyncio.sleep(random.uniform(30, 120))  # تأخير بين إنشاء المهام
 
                 await asyncio.gather(*tasks)
-                await asyncio.sleep(random.uniform(60, 240))  # تأخير عشوائي بين الدورات
+                await asyncio.sleep(10)
 
-        except Exception as e:
+        except Exception  as e:
             self.log(f"{Fore.RED+Style.BRIGHT}Error: {e}{Style.RESET_ALL}")
             raise e
 
